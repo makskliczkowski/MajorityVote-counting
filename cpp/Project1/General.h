@@ -57,10 +57,13 @@ namespace general {
 		};
 	protected:
 		/* lattice parameters */
-		int Ns;
+		int Ns= 0;
+		int Lx = 0;
+		int Ly = 0;
 		lattice2D::lattice_types type;
 		neighborsStructure nearest_neighbours;
 		neighborsStructure next_nearest_neighbours;
+		std::vector<std::vector<int>> coordinates;
 	public:
 		virtual ~lattice2D() = default;
 		virtual std::unique_ptr<general::lattice2D> clone() const = 0; // pure virtual clone
@@ -82,15 +85,16 @@ namespace general {
 		virtual void calculate_nnn_pbc() = 0;
 		virtual void calculate_nn() = 0;
 		virtual void calculate_nnn() = 0;
+		void calculate_coordinates();
+		int get_coordinates(const int lat_site, const int axis);
 	};
 	/// <summary>
 	/// Square lattice inherits from lattice
 	/// </summary>
 	class square_lattice :public virtual lattice2D {
-	private:
-		int Lx;
-		int Ly;
+	protected:
 	public:
+		
 		square_lattice();
 		square_lattice(int Lx, int Ly);
 		~square_lattice() final;
@@ -106,10 +110,10 @@ namespace general {
 		void calculate_nnn() override;
 
 		/* Clone functions */
-		virtual std::unique_ptr<general::lattice2D> clone() const override {
+		std::unique_ptr<general::lattice2D> clone() const override {
 			return std::unique_ptr<general::lattice2D>(new general::square_lattice(*this));
 		}
-		virtual std::unique_ptr <general::lattice2D > move_clone() override {
+		std::unique_ptr <general::lattice2D > move_clone() override {
 			return std::unique_ptr<general::lattice2D>(new general::square_lattice(std::move(*this)));
 		}
 	};
@@ -119,8 +123,6 @@ namespace general {
 	/// </summary>
 	class triangle_lattice :public virtual lattice2D {
 	private:
-		int Lx;
-		int Ly;
 	public:
 		triangle_lattice();
 		triangle_lattice(int Lx, int Ly);
@@ -137,10 +139,10 @@ namespace general {
 		void calculate_nnn() override;
 
 		/* Clone functions */
-		virtual std::unique_ptr<general::lattice2D> clone() const override {
+		std::unique_ptr<general::lattice2D> clone() const override {
 			return std::unique_ptr<general::lattice2D>(new general::triangle_lattice(*this));
 		}
-		virtual std::unique_ptr <general::lattice2D > move_clone() override {
+		std::unique_ptr <general::lattice2D > move_clone() override {
 			return std::unique_ptr<general::lattice2D>(new general::triangle_lattice(std::move(*this)));
 		}
 	};

@@ -38,7 +38,8 @@ general::square_lattice::square_lattice(int Lx, int Ly)
 	this->Lx = Lx;
 	this->Ly = Ly;
 	this->Ns = Lx * Ly;
-	this->calculate_nn_pbc();
+	this->square_lattice::calculate_nn_pbc();
+	this->calculate_coordinates();
 	//this->calculate_nnn();
 	this->type = general::lattice2D::lattice_types::square;
 
@@ -159,6 +160,17 @@ int general::lattice2D::get_Ns()
 	return this->Ns;
 }
 
+void general::lattice2D::calculate_coordinates()
+{
+	this->coordinates = std::vector<std::vector<int>>(Ns, std::vector<int>(2, 0));
+	int LxLy = this->Ns;
+	for (int i = 0; i < Ns; i++) {
+		this->coordinates[i][0] = myModuloEuclidean(i , Lx);
+		this->coordinates[i][1] = (static_cast<int>(1.0 * i / Lx)) % Ly;
+		//std::cout << "(" << this->coordinates[i][0] << "," << this->coordinates[i][1] << "," << this->coordinates[i][2] << ")\n";
+	}
+}
+
 general::lattice2D::lattice_types general::lattice2D::get_type()
 {
 	return this->type;
@@ -204,6 +216,11 @@ int general::lattice2D::get_nnn_number(int x, int y)
 	return this->next_nearest_neighbours[x][y].size();
 }
 
+int general::lattice2D::get_coordinates(const int lat_site,const int axis)
+{
+	//cout << this->coordinates[lat_site][axis] << endl;
+	return this->coordinates[lat_site][axis];
+}
 /* TRAINGULAR LATTICE */
 
 general::triangle_lattice::triangle_lattice()
@@ -218,8 +235,9 @@ general::triangle_lattice::triangle_lattice(int Lx, int Ly)
 	this->Lx = Lx;
 	this->Ly = Ly;
 	this->Ns = Lx * Ly;
-	this->calculate_nn_pbc();
-	this->calculate_nnn();
+	this->triangle_lattice::calculate_nn_pbc();
+	this->triangle_lattice::calculate_nnn();
+	this->calculate_coordinates();
 	this->type = general::lattice2D::lattice_types::triangle;
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "General.h"
+#include "xoshiro_pp.h"
 
 #include  <vector>
 #include <random>
@@ -7,11 +8,8 @@
 #include <numeric>
 #include <string>
 #include <iostream>
-#include <execution>
 using namespace std;
 
-inline std::random_device rd{};
-inline std::mt19937 eng{rd()};
 
 /*struct random_num {
     // Hold RNG state as a member variable
@@ -32,12 +30,13 @@ inline std::mt19937 eng{rd()};
 };*/
 
 
-double randZero_One_Uni();
-int randInt_Uni(int L);
+inline double randZero_One_Uni(XoshiroCpp::Xoshiro256PlusPlus& eng);
+inline int randInt_Uni(int L,XoshiroCpp::Xoshiro256PlusPlus& eng);
 int myModuloEuclidean(int a, int b);
 
-double proba(int nei_sum, double p, double q, int spin);
+inline double proba(int nei_sum, double p, double q, int spin);
 void simulationAverages(int N, int num_nei, int mcs, int av_num, double pstart,double pmax, int pnum, std::vector<double> qs,std::string type = "square", bool plot_in_time = false);
 void simulationAveragesNonInfty(int Lx,int Ly, int mcs, int av_num, double pstart,double pmax, int pnum, std::vector<double> qs,std::string type = "square",std::string savename="simu");
-std::vector<short> make_ran_lattice(int N);
+std::vector<short> make_ran_lattice(int N,XoshiroCpp::Xoshiro256PlusPlus& eng);
 
+int sign(int x);
