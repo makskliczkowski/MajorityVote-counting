@@ -25,8 +25,8 @@ void simulationAverages(int N, int num_nei, int mcs, int av_num, double pstart,d
     // pnum - number of ps
     //std::random_device rd{};
 	//std::mt19937 eng{rd()};
-	const std::uint64_t seed = 12345;
-	XoshiroCpp::Xoshiro256PlusPlus eng(seed);
+	const std::uint64_t seed = static_cast<uint64_t>(std::time(nullptr));
+	XoshiroCpp::Xoshiro256PlusPlus eng(Random_SeedInit(seed));
 //#pragma omp parallel for
 	const int qs_num = qs.size();
     for(int qi=0; qi < qs_num; qi++)
@@ -111,8 +111,8 @@ void simulationAveragesNonInfty(int Lx,int Ly, int mcs, int av_num, double pstar
     else lat = new general::triangle_lattice(Lx,Ly);
 
 	
-	const std::uint64_t seed = 12345;
-	XoshiroCpp::Xoshiro256PlusPlus eng(seed);
+	const std::uint64_t seed = static_cast<uint64_t>(std::time(nullptr));
+	XoshiroCpp::Xoshiro256PlusPlus eng(Random_SeedInit(seed));
 
 	const int qs_num = qs.size();
     for(int qi=0; qi < qs_num; qi++)
@@ -169,7 +169,7 @@ void simulationAveragesNonInfty(int Lx,int Ly, int mcs, int av_num, double pstar
                     nums[spin_num_x][spin_num_y] = - spin;
                     //m -= spin * 2;
             }
-        	const int corr_time = 2e2 * N;
+        	const int corr_time = 100*N;
 			for(int av = 0; av < av_num;av++){
 				for(int mc = 0; mc < corr_time; mc++){
 					const int spin_num = randInt_Uni(N-1,eng); // choose the spin to propose a flip -x
@@ -274,4 +274,18 @@ int myModuloEuclidean(int a, int b)
 		m = (b < 0) ? m - b : m + b;
 	}
 	return m;
+}
+uint64_t Random_SeedInit(uint64_t n)
+{
+    std::vector<uint64_t> s(16,0);
+	for (int i = 0; i < 16; i++)
+	{
+		n ^= n >> 12;   // a
+		n ^= n << 25;   // b
+		n ^= n >> 27;   // c
+
+		// 2685821657736338717 = 72821711 * 36882155347, from Pierre L'Ecuyer's paper
+		s[i] = n * 2685821657736338717LL;
+	}
+    return std::accumulate(s.begin(),s.end(), 0.0);
 }

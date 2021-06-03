@@ -40,3 +40,5 @@ void simulationAveragesNonInfty(int Lx,int Ly, int mcs, int av_num, double pstar
 std::vector<short> make_ran_lattice(int N,XoshiroCpp::Xoshiro256PlusPlus& eng);
 
 int sign(int x);
+
+uint64_t Random_SeedInit(uint64_t n);
