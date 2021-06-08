@@ -134,7 +134,7 @@ void simulationAveragesNonInfty(int Lx,int Ly, int mcs, int av_num, double pstar
             pstep = 1;
         std::cout<< "-------------- starting simulation for q = " + std::to_string(q) + " and N = " + std::to_string(N) + "--------------" << std::endl;
     	std::vector<std::vector<std::tuple<double,double>>> averages(3);
-    	#pragma omp parallel for num_threads(8) shared(done)
+    	#pragma omp parallel for num_threads(5) shared(done)
         for(int pi = 0;pi< pnum; pi++){
         	double p = pstart + pi*pstep;
             double av_abs_m = 0;// 0
